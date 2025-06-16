@@ -70,7 +70,7 @@ func (r *userRepository) Create(ctx context.Context, user *dto.UserRequest) (int
 }
 
 func (r *userRepository) List(ctx context.Context) ([]dto.UserResponse, error) {
-	query := `SELECT * FROM users ORDER BY name`
+	query := `SELECT id, name, profile, document, card_number, status, work_start, work_end FROM users ORDER BY name`
 
 	rows, err := r.db.QueryContext(ctx, query)
 	if err != nil {
@@ -86,6 +86,7 @@ func (r *userRepository) List(ctx context.Context) ([]dto.UserResponse, error) {
 			&user.Name,
 			&user.Profile,
 			&user.Document,
+			&user.CardNumber,
 			&user.Status,
 			&user.WorkStart,
 			&user.WorkEnd,
