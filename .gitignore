@@ -1,0 +1,48 @@
+# Go
+/bin/
+/build/
+/dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+*.log
+coverage.out
+
+# Go modules
+/vendor/
+
+# Wails
+frontend/node_modules/
+wailsjs/
+frontend/dist/
+frontend/.output/
+frontend/.cache/
+frontend/build/
+
+# Node/React
+node_modules/
+*.log
+yarn.lock
+package-lock.json
+npm-debug.log*
+.DS_Store
+.env
+.env.*
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Misc
+*.local
+*.bak
