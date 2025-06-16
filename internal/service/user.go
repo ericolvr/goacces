@@ -8,11 +8,12 @@ import (
 )
 
 type UserService interface {
-	FindByID(ctx context.Context, id int) (*dto.UserResponse, error)
 	Create(ctx context.Context, user *dto.UserRequest) (int, error)
+	List(ctx context.Context) ([]dto.UserResponse, error)
+	FindByID(ctx context.Context, id int) (*dto.UserResponse, error)
+	PinExists(ctx context.Context, pin string) (*dto.QueryPinReponse, error)
 	Update(ctx context.Context, user *dto.UserUpdateRequest) error
 	Delete(ctx context.Context, id int) error
-	List(ctx context.Context) ([]dto.UserResponse, error)
 }
 
 type userService struct {
@@ -33,6 +34,10 @@ func (s *userService) List(ctx context.Context) ([]dto.UserResponse, error) {
 
 func (s *userService) FindByID(ctx context.Context, id int) (*dto.UserResponse, error) {
 	return s.repo.FindByID(ctx, id)
+}
+
+func (s *userService) PinExists(ctx context.Context, pin string) (*dto.QueryPinReponse, error) {
+	return s.repo.PinExists(ctx, pin)
 }
 
 func (s *userService) Update(ctx context.Context, user *dto.UserUpdateRequest) error {

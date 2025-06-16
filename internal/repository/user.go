@@ -17,6 +17,7 @@ type UserRepository interface {
 	Create(ctx context.Context, user *dto.UserRequest) (int, error)
 	List(ctx context.Context) ([]dto.UserResponse, error)
 	FindByID(ctx context.Context, id int) (*dto.UserResponse, error)
+	PinExists(ctx context.Context, pin string) (*dto.QueryPinReponse, error)
 	Update(ctx context.Context, user *dto.UserUpdateRequest) error
 	Delete(ctx context.Context, id int) error
 }
@@ -121,6 +122,20 @@ func (r *userRepository) FindByID(ctx context.Context, id int) (*dto.UserRespons
 		return nil, fmt.Errorf("error finding user by id: %w", err)
 	}
 	return &user, nil
+}
+
+func (r *userRepository) PinExists(ctx context.Context, pin string) (*dto.QueryPinReponse, error) {
+	query := `SELECT name, profile, document FROM users WHERE pin = ? LIMIT 1`
+	var resp dto.QueryPinReponse
+
+	err := r.db.QueryRowContext(ctx, query, pin).Scan(&resp.Name, &resp.Profile, &resp.Document)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrNotFound
+		}
+		return nil, fmt.Errorf("error checking pin: %w", err)
+	}
+	return &resp, nil
 }
 
 func (r *userRepository) Update(ctx context.Context, user *dto.UserUpdateRequest) error {

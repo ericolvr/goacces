@@ -85,3 +85,40 @@ func TestUserRepository_CreateAndFindByID(t *testing.T) {
 	}
 	// Pin e Coercion não estão em UserResponse; se quiser testar, adicione no DTO e na query.
 }
+
+func TestUserRepository_PinExists(t *testing.T) {
+	db := setupTestDB(t)
+	repo := NewUserRepository(db)
+
+	// Cria usuário
+	user := &dto.UserRequest{
+		Name:       "Maria",
+		Profile:    "user",
+		Document:   "987654321",
+		Pin:        111222,
+		Coercion:   7654321,
+		CardNumber: 123456,
+		Status:     true,
+		WorkStart:  "09:00",
+		WorkEnd:    "18:00",
+	}
+	_, err := repo.Create(context.Background(), user)
+	if err != nil {
+		t.Fatalf("Create failed: %v", err)
+	}
+
+	// Pin existe
+	resp, err := repo.PinExists(context.Background(), "111222")
+	if err != nil {
+		t.Fatalf("PinExists failed: %v", err)
+	}
+	if resp.Name != "Maria" {
+		t.Errorf("Name mismatch: got %s, want %s", resp.Name, "Maria")
+	}
+
+	// Pin não existe
+	_, err = repo.PinExists(context.Background(), "999999")
+	if err == nil {
+		t.Errorf("Esperava erro para pin inexistente, mas não houve erro")
+	}
+}

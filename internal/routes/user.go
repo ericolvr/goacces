@@ -15,6 +15,7 @@ func UserRoutes(
 		routes.POST("", userHandler.Create)
 		routes.GET("", userHandler.List)
 		routes.GET("/:id", userHandler.FindByID)
+		routes.GET("/check_pin", userHandler.PinExists)
 		routes.PUT("/:id", userHandler.Update)
 		routes.DELETE("/:id", userHandler.Delete)
 	}

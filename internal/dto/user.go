@@ -35,3 +35,9 @@ type UserUpdateRequest struct {
 	WorkStart  string `json:"work_start" validate:"required"`
 	WorkEnd    string `json:"work_end" validate:"required"`
 }
+
+type QueryPinReponse struct {
+	Name     string `json:"name" validate:"required,min=5"`
+	Profile  string `json:"profile" validate:"required"`
+	Document string `json:"document"`
+}

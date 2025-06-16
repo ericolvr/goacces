@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"strconv"
 
-
 	"newaccess/internal/dto"
 	"newaccess/internal/repository"
 	"newaccess/internal/service"
@@ -45,12 +44,10 @@ func (h *UserHandler) List(c *gin.Context) {
 		return
 	}
 
-	response := make([]dto.UserResponse, 0, len(users))
-	for _, user := range users {
-		response = append(response, user)
+	if users == nil {
+		users = make([]dto.UserResponse, 0)
 	}
-
-	c.JSON(http.StatusOK, response)
+	c.JSON(http.StatusOK, users)
 }
 
 func (h *UserHandler) FindByID(c *gin.Context) {
@@ -72,6 +69,24 @@ func (h *UserHandler) FindByID(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, user)
+}
+
+func (h *UserHandler) PinExists(c *gin.Context) {
+	pin := c.Query("pin")
+	if pin == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing pin parameter"})
+		return
+	}
+	resp, err := h.service.PinExists(c.Request.Context(), pin)
+	if err != nil {
+		if err == repository.ErrNotFound {
+			c.JSON(http.StatusNotFound, gin.H{"error": "PIN not found"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, resp)
 }
 
 func (h *UserHandler) Update(c *gin.Context) {
