@@ -16,7 +16,6 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 )
 
-//go:embed all:frontend/dist
 var assets embed.FS
 
 func main() {
@@ -26,14 +25,18 @@ func main() {
 	}
 	defer db.Close()
 
-	repo := repository.NewUserRepository(db)
-	service := service.NewUserService(repo)
-	handler := handlers.NewUserHandler(service)
+	userRepo := repository.NewUserRepository(db)
+	userService := service.NewUserService(userRepo)
+	userHandler := handlers.NewUserHandler(userService)
+
+	deviceRepo := repository.NewDeviceRepository(db)
+	deviceService := service.NewDeviceService(deviceRepo)
+	deviceHandler := handlers.NewDeviceHandler(deviceService)
 
 	router := gin.Default()
-	routes.UserRoutes(router, handler)
+	routes.UserRoutes(router, userHandler)
+	routes.DeviceRoutes(router, deviceHandler)
 
-	// Inicia o servidor Gin em uma goroutine
 	go func() {
 		if err := router.Run(":8080"); err != nil {
 			log.Fatalf("Erro ao iniciar servidor Gin: %v", err)
