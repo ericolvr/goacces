@@ -1,9 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CircleCheckBig, Delete } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
+import { PinExists } from '../../../wailsjs/go/main/App';
 
 
 export function Keypad() {
+	const nav = useNavigate();
 	const [value, setValue] = useState("");
+	const [document, setDocument] = useState("");
 
 	const handleClick = (num) => {
 		setValue((prev) => (prev.length < 7 ? prev + num : prev));
@@ -13,10 +18,16 @@ export function Keypad() {
 		setValue((prev) => prev.slice(0, -1));
 	};
 
-	const handleCheck = () => {
-		console.log("Confirmado:", value);
+	const handleCheck = async () => {
+		try {
+			const result = await PinExists(value);
+			nav("/face", { state: { document: result.document } });
+		} catch (error) {
+			console.error('Erro ao consultar PIN:', error);
+		}
 	};
 
+		
 	return (
     	<div className="flex w-[320px] flex-col justify-start">
     		<div className='px-14 h-[30px] mt-3 flex justify-center items-center'>

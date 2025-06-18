@@ -9,7 +9,7 @@ export function Home() {
   
     return (
         <div className="flex flex-col bg-[#111111] w-full h-[480px]">    
-            <Header />
+            {/* <Header />
             <div className="flex h-full">
                 <Sidebar />
                 <div className="bg-[#292929] mt-[40px] w-[1px] h-[325px] " />
@@ -21,11 +21,11 @@ export function Home() {
                         </div>
                         <Connection />
                     </div>
-                </div>
+                </div> */}
                 <div className='w-[300px] h-screen'>
                     <Keypad />
                 </div>
             </div>    
-        </div>
+        // </div>
     );
 }
